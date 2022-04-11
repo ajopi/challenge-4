@@ -20,6 +20,8 @@ export const Home = () => {
     const [DriverStatus, setDriverStatus] = useState(null)
     const [dataMobilFilter, setdataMobilFilter] = useState(null)
 
+    const [carDetail, setcarDetail] = useState([])
+
     var axios = require('axios');
 
     var config = {
@@ -61,18 +63,46 @@ export const Home = () => {
 
     }
 
-    const handlePindahBayar = (data) => {
-        setParameterPindah(2);
-        return <Payment/>
+    const handlePindahBayar = () => {
+        return <Payment id = {carDetail.id} gambar = {carDetail.image} nama = {carDetail.name} harga={carDetail.price}/>
+    }
+
+    const getCarById = (id) => {
+        var axios = require('axios');
+
+        var config = {
+            method: 'get',
+            url: `https://rent-cars-api.herokuapp.com/admin/car/${id}`,
+            headers: {}
+        };
+
+        axios(config)
+            .then(function (response) {
+                setcarDetail(response.data)
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+        
+        
+
     }
 
     const handleMap = () => {
         return dataMobilFilter.map((value, index) => {
-            return <CardDefault nama={value.name} harga={value.price} foto={value.image} kategori={value.category} fungsiPayment={()=>{handlePindahBayar(value)}} />
+            return <CardDefault nama={value.name} harga={value.price} foto={value.image} kategori={value.category} fungsiPayment={() => { setParameterPindah(2); getCarById(value.id) }} />
         })
     }
 
 
+    const fungsiDetail = () => {
+        if (ParameterPindah === 1) {
+            return handleMap();
+        } else if (ParameterPindah === 2) {
+
+            return handlePindahBayar();
+        }
+    }
 
 
 
@@ -150,11 +180,13 @@ export const Home = () => {
 
 
             <Container className='container-card'>
-                {ParameterPindah === 1 ? handleMap() : null}
-                
+                {fungsiDetail()}
+                {/* {ParameterPindah === 1 ? handleMap() : null}
+                {ParameterPindah === 2 ? handlePindahBayar() : null} */}
+
             </Container>
 
-            
+
 
 
 
