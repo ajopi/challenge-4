@@ -56,7 +56,7 @@ export const CardDefault = ({ nama, harga, foto, kategori, fungsiPayment }) => {
 
           </div>
 
-          <Button variant="primary" className='property-card-btn' onClick={() => { fungsiPayment() }}>Pilih Mobil</Button>
+          <Button variant="primary" className='property-card-btn' onClick={fungsiPayment}>Pilih Mobil</Button>
         </Card.Body>
       </Card>
     </div>
